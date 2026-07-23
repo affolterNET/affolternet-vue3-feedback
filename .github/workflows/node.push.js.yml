@@ -1,0 +1,77 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Node.js PUBLISH
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  version-and-tag:
+    runs-on: ubuntu-latest
+    # The affolterNET org defaults GITHUB_TOKEN to read-only, so this job must
+    # request write explicitly — without it the version bump/tag push fails
+    # with 403 "Permission to <repo> denied to github-actions[bot]".
+    permissions:
+      contents: write
+    
+    steps:
+    - uses: actions/checkout@v6
+      with:
+        fetch-depth: 0
+        token: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Configure Git
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+    
+    - name: Use Node.js 20.x
+      uses: actions/setup-node@v6
+      with:
+        node-version: 20.x
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Make push.sh executable
+      run: chmod +x ./scripts/push.sh
+    
+    - name: Run push.sh script for versioning and tagging
+      run: cd scripts && ./push.sh
+
+  call_build:
+    needs: version-and-tag
+    uses: ./.github/workflows/node.build.js.yml
+  publish:
+
+    needs: call_build
+
+    runs-on: ubuntu-latest
+
+    environment: prod
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+    - uses: actions/checkout@v6
+      with:
+        ref: main
+        # Pull the latest changes including version bump
+        fetch-depth: 0
+    - name: Use Node.js 22.x
+      uses: actions/setup-node@v6
+      with:
+        node-version: 22.x
+        cache: 'npm'
+        registry-url: 'https://registry.npmjs.org'
+    - name: get build-output artifact
+      uses: actions/download-artifact@v8
+      with:
+        name: build-output
+        path: dist/
+    - run: npx npm@latest publish --provenance

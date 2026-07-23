@@ -1,0 +1,47 @@
+{
+ "name": "affolternet-vue3-feedback",
+ "version": "0.2.0",
+ "description": "Vue 3 user-feedback UI for affolterNET apps: a global loading bar and event-driven toasts",
+ "repository": {
+  "type": "git",
+  "url": "git+https://github.com/affolterNET/affolternet-vue3-feedback.git"
+ },
+ "author": "Martin Affolter <martin@affolter.net>",
+ "license": "MIT",
+ "types": "./dist/index.d.ts",
+ "style": "./dist/affolternet-vue3-feedback.css",
+ "sideEffects": [
+  "*.css"
+ ],
+ "files": [
+  "dist"
+ ],
+ "main": "./dist/affolternet-vue3-feedback.umd.js",
+ "module": "./dist/affolternet-vue3-feedback.mjs",
+ "exports": {
+  ".": {
+   "types": "./dist/index.d.ts",
+   "import": "./dist/affolternet-vue3-feedback.mjs",
+   "require": "./dist/affolternet-vue3-feedback.umd.js"
+  },
+  "./css": "./dist/affolternet-vue3-feedback.css"
+ },
+ "unpkg": "./dist/affolternet-vue3-feedback.umd.js",
+ "jsdelivr": "./dist/affolternet-vue3-feedback.umd.js",
+ "scripts": {
+  "build": "vue-tsc --noEmit && vite build"
+ },
+ "peerDependencies": {
+  "vue": "^3.2.37"
+ },
+ "devDependencies": {
+  "@vitejs/plugin-vue": "^6.0.1",
+  "mitt": "^3.0.0",
+  "pug": "^3.0.2",
+  "sass": "^1.54.3",
+  "typescript": "^5.9.3",
+  "vite": "^7.1.12",
+  "vite-plugin-dts": "^4.5.4",
+  "vue-tsc": "^3.1.3"
+ }
+}
