@@ -1,6 +1,6 @@
 {
  "name": "affolternet-vue3-feedback",
- "version": "0.2.1",
+ "version": "0.2.2",
  "description": "Vue 3 user-feedback UI for affolterNET apps: a global loading bar and event-driven toasts",
  "repository": {
   "type": "git",
